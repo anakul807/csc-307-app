@@ -7,32 +7,26 @@ function TableHeader() {
       <tr>
         <th>Name</th>
         <th>Job</th>
+        <th>Remove</th>
       </tr>
     </thead>
   );
 }
 
 function TableBody(props) {
-  const rows = props.characterData.map((row, index) => {
-    return (
-      <tr key={index}>
+  const rows = props.characterData.map((row, index) => (
+    <tr key={index}>
       <td>{row.name}</td>
       <td>{row.job}</td>
       <td>
         <button onClick={() => props.removeCharacter(index)}>
-        Delete
+          Delete
         </button>
       </td>
-      </tr>
-    );
-   }
-  );
-  return (
-      <tbody>
-        {rows}
-       </tbody>
-   );
-  
+    </tr>
+  ));
+
+  return <tbody>{rows}</tbody>;
 }
 
 function Table(props) {
