@@ -1,5 +1,6 @@
 // backend.js
 import express from "express";
+import cors from "cors";
 
 const app = express();
 const port = 8000;
@@ -15,6 +16,10 @@ app.listen(port, () => {
     `Example app listening at http://localhost:${port}`
   );
 });
+
+function generateId() {
+  return Math.floor(Math.random() * 1000000);
+}
 
 const users = {
   users_list: [
@@ -91,11 +96,6 @@ const addUser = (user) => {
   return user;
 };
 
-app.post("/users", (req, res) => {
-  const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
-});
 
 // step 7
 
@@ -141,4 +141,25 @@ app.get("/users", (req, res) => {
   }
 
   return res.send(users);
+});
+
+app.use(cors());
+
+app.post("/users", (req, res) => {
+  const userToAdd = req.body;
+  userToAdd.id = generateId();
+  users_list.push(userToAdd);
+  return res.status(201).send(userToAdd);
+});
+
+app.delete("/users/:id", (req, res) => {
+  const id = req.params.id;
+  const idx = users_list.findIndex(u => String(u.id) === String(id));
+
+  if (idx === -1) {
+    return res.status(404).send({ error: "User not found" });
+  }
+
+  users_list.splice(idx, 1);
+  return res.status(204).send();
 });
